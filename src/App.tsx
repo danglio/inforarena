@@ -15,12 +15,16 @@ import { AuthModal } from './components/AuthModal';
 import { ProfileModal } from './components/ProfileModal';
 import { LeaderboardModal } from './components/LeaderboardModal';
 import { CreateChallengeModal } from './components/CreateChallengeModal';
+import { MaintenanceScreen } from './components/MaintenanceScreen';
 
 export default function App() {
   const [profile, setProfile] = useState<UserProfile>(loadUserProfile());
   const [history, setHistory] = useState<RoundResult[]>(loadMatchHistory());
   const [challenges, setChallenges] = useState<Challenge[]>(loadAllChallenges());
   const [soundEnabled, setSoundEnabled] = useState<boolean>(!sound.isMuted);
+
+  // Maintenance state: false (Đã mở lại hoạt động bình thường 100%)
+  const [isMaintenanceActive, setIsMaintenanceActive] = useState<boolean>(false);
 
   // View state: 'lobby' | 'battle'
   const [currentView, setCurrentView] = useState<'lobby' | 'battle'>('lobby');
@@ -116,6 +120,11 @@ export default function App() {
     setCurrentView('lobby');
     setIsProfileOpen(true);
   };
+
+  // If maintenance mode is active, display the maintenance screen
+  if (isMaintenanceActive) {
+    return <MaintenanceScreen onUnlock={() => setIsMaintenanceActive(false)} />;
+  }
 
   return (
     <div className="min-h-screen cyber-grid-bg text-slate-100 flex flex-col relative overflow-x-hidden">
